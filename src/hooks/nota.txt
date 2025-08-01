@@ -1,0 +1,1 @@
+Hooks personalizados para lógica compartida

@@ -1,0 +1,29 @@
+.carousel-container {
+  position: relative;
+  width: 300px; /* Ajusta el ancho a tus necesidades */
+  height: 200px; /* Ajusta la altura a tus necesidades */
+  overflow: hidden; /* Oculta las imágenes que no están visibles */
+}
+
+.carousel-images {
+  display: flex; /* Asegura que las imágenes estén en fila */
+  flex-direction: row; /* Las imágenes se colocan en una fila horizontal */
+  width: calc(300px * 6); /* 6 imágenes (3 originales + 3 duplicadas) * su ancho */
+  animation: scroll 15s linear infinite; /* Animación infinita */
+}
+
+.carousel-images img {
+  width: 300px; /* Ajusta el ancho de las imágenes */
+  height: auto; /* Mantiene la proporción original de las imágenes */
+  flex-shrink: 0; /* Evita que las imágenes se reduzcan o cambien de tamaño */
+}
+
+/* Animación infinita */
+@keyframes scroll {
+  0% {
+    transform: translateX(0); /* Inicia desde la primera imagen */
+  }
+  100% {
+    transform: translateX(-50%); /* Se desplaza a la mitad del conjunto de imágenes duplicadas */
+  }
+}
