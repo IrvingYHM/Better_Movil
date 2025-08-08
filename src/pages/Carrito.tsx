@@ -43,7 +43,7 @@ const Carrito: React.FC = () => {
       const fetchDetalleCarrito = async () => {
           if (clienteId) {
               try {
-                  const response = await fetch(`http://localhost:3000/Carrito/uno?userId=${clienteId}`);
+                  const response = await fetch(`https://backopt-production.up.railway.app/Carrito/uno?userId=${clienteId}`);
                   if (!response.ok) throw new Error("Error al obtener el detalle del carrito");
                   const data = await response.json();
                   console.log("Detalle del carrito:", data);
@@ -66,7 +66,7 @@ const Carrito: React.FC = () => {
     const stripe = await stripePromise;
 
     // Crear la sesión de pago con los detalles del carrito
-    const response = await fetch('http://localhost:3000/create-checkout-session', {
+    const response = await fetch('https://backopt-production.up.railway.app/create-checkout-session', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

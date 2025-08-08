@@ -73,3 +73,11 @@ describe('Login', () => {
     fireEvent.click(screen.getByTestId('submit-button'));
 
     // Mock de fetch
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ message: 'Credenciales incorrectas' }),
+    });
+
+    await waitFor(() => expect(screen.queryByText('Credenciales incorrectas')).toBeInTheDocument());
+  });
+});

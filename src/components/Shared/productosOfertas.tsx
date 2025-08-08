@@ -32,7 +32,7 @@ const ProductosOfertas: React.FC = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const api = "http://localhost:3000/productos/ProductosOfertas";
+        const api = "https://backopt-production.up.railway.app/productos/ProductosOfertas";
         const response = await fetch(api, {});
         const data: Producto[] = await response.json();
         if (!response.ok) throw new Error('Error de carga');

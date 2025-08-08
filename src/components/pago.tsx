@@ -14,7 +14,7 @@ const PaymentForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { data: { clientSecret } } = await axios.post('http://localhost:3000/crear-pago', {
+    const { data: { clientSecret } } = await axios.post('https://backopt-production.up.railway.app/crear-pago', {
       amount: 1000, // Monto en centavos (10 USD)
       currency: 'usd',
     });

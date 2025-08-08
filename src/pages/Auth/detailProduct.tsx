@@ -17,8 +17,8 @@ import { loadStripe } from '@stripe/stripe-js';
 const stripePromise = loadStripe('pk_test_51QF7CwP4u0AspHWqVkcLHlGObKirereYBP7bQJOetZ3Bgv1HQDXfCaEQBWM8cv3kvJ69rNvjdOwsMw4nzqgSxGhN00ik1ViWMd');
 
 
-const carritoApiBaseUrl = "http://localhost:3000/Carrito/";
-const detallesCarritoApiBaseUrl = "http://localhost:3000/DetalleCarrito/";
+const carritoApiBaseUrl = "https://backopt-production.up.railway.app/Carrito/";
+const detallesCarritoApiBaseUrl = "https://backopt-production.up.railway.app/DetalleCarrito/";
 
 function parseJwt(token: string) {
   var base64Url = token.split(".")[1];
@@ -177,7 +177,7 @@ const DetalleProducto: React.FC = () => {
     const stripe = await stripePromise;
 
     // Crea el PaymentIntent en tu servidor
-    const response = await fetch('http://localhost:3000/create-checkout-session', {
+    const response = await fetch('https://backopt-production.up.railway.app/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
