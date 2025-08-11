@@ -1,3 +1,90 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    @apply bg-gray-100;
+}
+
+/* Forzar estilos de Tailwind en componentes Ionic */
+@layer components {
+  /* IonButton overrides */
+  ion-button.gradient-button {
+    --background: linear-gradient(to right, var(--ion-color-teal-500), var(--ion-color-blue-600)) !important;
+    --color: white !important;
+    --border-radius: 8px !important;
+    --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    --padding-start: 16px !important;
+    --padding-end: 16px !important;
+    --padding-top: 8px !important;
+    --padding-bottom: 8px !important;
+  }
+  
+  /* IonText overrides */
+  ion-text .text-teal-500 {
+    color: #0b9ca7 !important;
+  }
+  
+  ion-text .text-green-700 {
+    color: #15803d !important;
+  }
+  
+  /* IonCard overrides */
+  ion-card .hover-scale:hover {
+    transform: scale(1.05) !important;
+    transition: all 0.3s ease !important;
+  }
+}
+
+@layer utilities {
+  /* Utilities específicas para Ionic */
+  .ion-text-small {
+    font-size: 0.875rem !important;
+  }
+  
+  .ion-text-xs {
+    font-size: 0.75rem !important;
+  }
+  
+  .ion-bg-gradient {
+    background: linear-gradient(to right, #0b9ca7, #2563eb) !important;
+  }
+  
+  /* Forzar Flexbox en Ionic */
+  .ion-flex {
+    display: flex !important;
+  }
+  
+  .ion-items-center {
+    align-items: center !important;
+  }
+  
+  .ion-justify-center {
+    justify-content: center !important;
+  }
+  
+  .ion-gap-4 {
+    gap: 1rem !important;
+  }
+}
+
+/* Animación shimmer para skeletons */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.animate-shimmer {
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Variables CSS para colores personalizados */
+:root {
+  --ion-color-teal-500: #0b9ca7;
+  --ion-color-teal-600: #00aec9;
+  --ion-color-blue-600: #2563eb;
+}

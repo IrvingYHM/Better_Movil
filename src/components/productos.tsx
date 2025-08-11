@@ -27,7 +27,7 @@ const Products: React.FC = () => {
 
   const handleAddToCart = async (product: any) => {
     try {
-      await addProductToCart(product.IdProducto);
+      await addProductToCart(1, product.IdProducto, 1); // carritoId, productId, cantidad
       setCart((prev) => [...prev, product]);
     } catch (err) {
       setError('Error adding product to cart');

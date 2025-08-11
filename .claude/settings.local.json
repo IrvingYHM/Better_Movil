@@ -3,7 +3,18 @@
     "allow": [
       "Bash(gradlew.bat build:*)",
       "Bash(./gradlew:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx vite build:*)",
+      "Bash(ionic cap sync:*)",
+      "Bash(npm run dev:*)",
+      "Bash(mv:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm start)",
+      "Bash(npm install:*)",
+      "Bash(vite build)",
+      "Bash(npx cap sync:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

@@ -40,20 +40,37 @@ import './theme/variables.css';
 /** importaciones de componenetes */
 import Menu from './components/Menu';
 import Footer from './components/Footer';
-import IniciaSesion from './pages/IniciaSesión';
-import AgendaCita from './pages/AgendaCita';
-import detalleCarrito from './pages/Carrito';
-import Productos from './pages/Productos';
-import RegistroU from './pages/RegistroU';
-import ProductsViewCart from './pages/productosViewCart';
-import RutaProtegida from './pages/RutaProtegida';
-import HomeAuth from './pages/Auth/Home'
-import DetalleProducto from './pages/Auth/detailProduct';
-import ProfileCard from './pages/Auth/perfilUser';
 import React from 'react';
+import RutaProtegida from './pages/RutaProtegida';
 import tratamientos from './components/tratamientos';
-import Carrito from './pages/Carrito';
 
+// Auth
+import IniciaSesion from './pages/Auth/IniciaSesión';
+
+// Productos
+import Productos from './pages/Productos/Productos';
+import DetalleProducto from './pages/Productos/DetalleProducto';
+import ProductsViewCart from './pages/Productos/productosViewCart';
+import Carrito from './pages/Productos/Carrito';
+
+// Registro
+import RegistroU from './pages/Registro/RegistroU';
+
+// Perfil
+import ProfileCard from './pages/Perfil/perfilUser';
+import ConfiguracionPerfil from './pages/Perfil/ConfiguracionPerfil';
+
+// Recuperacion
+import RecuperacionPassword from './pages/Recuperacion/RecuperacionPassword';
+
+// Footer
+import TerminosCondiciones from './pages/Footer/TerminosCondiciones';
+import AcercaDe from './pages/Footer/AcercaDe';
+
+// Otras páginas
+import Catalogos from './pages/Catalogos';
+import Retos from './pages/Retos';
+import UneteEquipo from './pages/UneteEquipo';
 
 
 setupIonicReact();
@@ -75,13 +92,18 @@ const App: React.FC = () => (
           <Route path="/Tratamiento"  component={tratamientos} />
           <Route path="/Productos/:id" component={DetalleProducto} /> 
           
+          {/* Nuevas rutas públicas */}
+          <Route path="/Catalogos" component={Catalogos} exact />
+          <Route path="/Retos" component={Retos} exact />
+          <Route path="/UneteEquipo" component={UneteEquipo} exact />
+          <Route path="/RecuperacionPassword" component={RecuperacionPassword} exact />
+          <Route path="/TerminosCondiciones" component={TerminosCondiciones} exact />
+          <Route path="/AcercaDe" component={AcercaDe} exact />
 
         {/**Rutas Protegidas */}
-          <Route path="/AgendaCita" render={() => <RutaProtegida element={<AgendaCita />} />} />
-        {/**<Route path="/Carrito" render={() => <RutaProtegida element={<Carrito />} />} /> */} 
-          <Route path="/HomeAuth" render={() => <RutaProtegida element={<HomeAuth />} />} />
           <Route path="/Perfil" render={() => <RutaProtegida element={<ProfileCard />} />} />
           <Route path="/Carrito" render={() => <RutaProtegida element={<Carrito />} />} />
+          <Route path="/ConfiguracionPerfil" render={() => <RutaProtegida element={<ConfiguracionPerfil />} />} />
         </IonRouterOutlet>
       
         </IonSplitPane>

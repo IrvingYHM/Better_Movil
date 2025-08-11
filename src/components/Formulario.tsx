@@ -1,19 +1,22 @@
 import {IonContent,IonPage,IonInput,IonButton,IonLabel,IonItem,IonIcon,IonToast,IonCheckbox,IonGrid,IonRow,IonCol,} from '@ionic/react';
-  import { useState, useEffect, useRef, useContext } from 'react';
-  import { eyeOff, eye } from 'ionicons/icons';
-  import { Link } from 'react-router-dom';
-  import { useForm } from 'react-hook-form';
-  import { toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
-  import ReCAPTCHA from 'react-google-recaptcha';
-  import { AuthContext } from '../contexts/Auth';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { eyeOff, eye } from 'ionicons/icons';
+import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { AuthContext } from '../contexts/Auth';
+import { StorageService } from '../services/storage';
 import React from 'react';
   
   const Login = () => {
     const [mostrarContra, setMostrarContra] = useState(false);
     const [intentosFallidos, setIntentosFallidos] = useState(0);
-    const [token, setToken] = useState(null);
+    const [token, setToken] = useState<string | null>(null);
+    const [captchaValue, setCaptchaValue] = useState<string | null>(null);
     const [usuarioLogueado, setUsuarioLogueado] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { login } = useContext(AuthContext);
   
     const {
@@ -25,59 +28,102 @@ import React from 'react';
     const captcha = useRef<ReCAPTCHA>(null);
   
     useEffect(() => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        setUsuarioLogueado(true);
-      }
+      const checkUserStatus = async () => {
+        const token = await StorageService.getItem('token');
+        if (token) {
+          setUsuarioLogueado(true);
+        }
+      };
+      
+      checkUserStatus();
     }, []);
   
-    const onChange = () => {
-      if (captcha.current?.getValue()) {
-        console.log('El usuario no es un robot');
+    const onChange = (value: string | null) => {
+      setCaptchaValue(value);
+      if (value) {
+        console.log('reCAPTCHA completado correctamente');
       }
+    };
+
+    const onErrorRecaptcha = () => {
+      console.error('Error en reCAPTCHA');
+      setCaptchaValue(null);
+      toast.error('Error al cargar reCAPTCHA. Por favor, recarga la página.');
+    };
+
+    const onExpiredRecaptcha = () => {
+      console.log('reCAPTCHA expirado');
+      setCaptchaValue(null);
+      toast.warning('reCAPTCHA expirado. Por favor, complétalo nuevamente.');
     };
   
     const onSubmit = async (data: any) => {
-      if (captcha.current?.getValue()) {
-        console.log('El usuario no es un robot iniciando sesion');
-        try {
-          const response = await fetch('https://backopt-production.up.railway.app/auth/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-          });
-          if (response.ok) {
-            const responseData = await response.json();
-            const receivedToken = responseData.token;
-            setToken(receivedToken);
-            localStorage.setItem('token', receivedToken);
-            login();
-            toast.success('Inicio de sesión exitoso');
-            setUsuarioLogueado(true);
-            setTimeout(() => {
-              window.location.href = '/HomeAuth';
-            }, 2000);
-          } else {
-            console.error('Error de inicio de sesión:', response.status); 
-            setIntentosFallidos(intentosFallidos + 1);
-            if (intentosFallidos >= 2) {
-              toast.error('Máximo de intentos fallidos alcanzado');
-            } else {
-              toast.error('Error al iniciar sesión');
-            }
-          }
+      // Verificar reCAPTCHA antes de proceder
+      if (!captchaValue) {
+        toast.error('Por favor completa el reCAPTCHA');
+        return;
+      }
+
+      setIsSubmitting(true);
+
+      try {
+        console.log('Iniciando sesión con reCAPTCHA válido');
+        
+        const response = await fetch('https://backopt-production.up.railway.app/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...data,
+            recaptchaToken: captchaValue
+          }),
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          const receivedToken = responseData.token;
+          setToken(receivedToken);
+          await StorageService.setItem('token', receivedToken);
+          login();
+          toast.success('Inicio de sesión exitoso');
+          setUsuarioLogueado(true);
           
-        } catch (error) {
-            console.error('Error:', error);
-            toast.error('Error de red, intente más tarde');
-            setTimeout(() => {
-              window.location.href = '/500';
-            }, 5000);
+          // Reset intentos fallidos al tener éxito
+          setIntentosFallidos(0);
+          
+          setTimeout(() => {
+            window.location.href = '/Home';
+          }, 2000);
+        } else {
+          console.error('Error de inicio de sesión:', response.status);
+          const newAttempts = intentosFallidos + 1;
+          setIntentosFallidos(newAttempts);
+          
+          // Reset reCAPTCHA después de un intento fallido
+          captcha.current?.reset();
+          setCaptchaValue(null);
+          
+          if (newAttempts >= 3) {
+            toast.error('Máximo de intentos fallidos alcanzado. El formulario ha sido deshabilitado.');
+          } else {
+            toast.error(`Error al iniciar sesión. Intentos restantes: ${3 - newAttempts}`);
           }
-      } else {
-        toast.error('Por favor acepta el captcha');
+        }
+        
+      } catch (error) {
+        console.error('Error de red:', error);
+        toast.error('Error de red, intente más tarde');
+        
+        // Reset reCAPTCHA en caso de error
+        captcha.current?.reset();
+        setCaptchaValue(null);
+        
+        setTimeout(() => {
+          window.location.href = '/500';
+        }, 5000);
+      } finally {
+        setIsSubmitting(false);
       }
     };
 
@@ -147,33 +193,61 @@ import React from 'react';
               <IonLabel>Recordar contraseña</IonLabel>
             </IonItem>
     
-            <div className="flex justify-center items-center recaptcha">
+            <div className="flex justify-center items-center recaptcha my-4">
               <ReCAPTCHA
                 data-testid="recaptcha"
                 ref={captcha}
                 sitekey="6LfZCW4pAAAAANILT3VzQtWcH_w6JIX1hzNyOBeF"
                 onChange={onChange}
+                onErrored={onErrorRecaptcha}
+                onExpired={onExpiredRecaptcha}
+                theme="light"
+                size="normal"
               />
             </div>
+
+            {/* Indicador visual del estado del reCAPTCHA */}
+            {captchaValue ? (
+              <div className="text-center text-green-600 text-sm mb-2">
+                ✓ reCAPTCHA completado
+              </div>
+            ) : (
+              <div className="text-center text-gray-500 text-sm mb-2">
+                Por favor completa el reCAPTCHA
+              </div>
+            )}
     
             <IonButton
               expand="block"
               type="submit"
               data-testid="submit-button"
               className="ion-margin-top"
-              disabled={intentosFallidos >= 3}
+              disabled={intentosFallidos >= 3 || isSubmitting || !captchaValue}
+              color={captchaValue && intentosFallidos < 3 ? "primary" : "medium"}
             >
-              {intentosFallidos >= 3
-                ? 'Botón inhabilitado por el máximo de intentos'
-                : 'Ingresar'}
+              {isSubmitting ? 'Iniciando sesión...' : 
+               intentosFallidos >= 3 ? 'Botón inhabilitado por el máximo de intentos' : 
+               !captchaValue ? 'Completa el reCAPTCHA para continuar' :
+               'Ingresar'}
             </IonButton>
           </form>
     
           <IonToast
             isOpen={intentosFallidos >= 3}
-            message="Máximo de intentos fallidos alcanzado"
-            duration={5000}
+            message="Máximo de intentos fallidos alcanzado. Por favor, recarga la página para intentar de nuevo."
+            duration={8000}
+            color="danger"
           />
+
+          {/* Información de ayuda para reCAPTCHA */}
+          {intentosFallidos > 0 && intentosFallidos < 3 && (
+            <div className="ion-text-center ion-margin-top">
+              <small className="text-orange-600">
+                Intentos fallidos: {intentosFallidos}/3. 
+                {intentosFallidos >= 2 && " ¡Último intento disponible!"}
+              </small>
+            </div>
+          )}
     
           <div className="ion-text-center ion-margin-top">
             <p>

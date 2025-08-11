@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
 import React, { ReactNode } from 'react';
 import { AuthContext } from '../contexts/Auth';
-import IniciaSesion from '../pages/IniciaSesión';
+import IniciaSesion from '../pages/Auth/IniciaSesión';
 // Definir el tipo de props para `MockAuthProvider`
 interface MockAuthProviderProps {
   children: ReactNode;

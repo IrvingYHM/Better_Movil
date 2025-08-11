@@ -1,7 +1,7 @@
 import { IonContent, IonDatetime, IonInput, IonLabel, IonPage, IonSelect, IonSelectOption } from "@ionic/react";
 import React from "react";
-import Header from "../components/UI/header";
-import Label from "../components/UI/label";
+import Header from "../../components/UI/header";
+import Label from "../../components/UI/label";
 
 const RegistroU: React.FC =()=>{
     return(

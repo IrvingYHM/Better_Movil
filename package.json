@@ -12,15 +12,17 @@
     "test": "jest",
     "test:backend": "jest",
     "test:e2e": "start-server-and-test start http://localhost:8100 'cypress run'",
-    "start": "ionic serve --port 8100",        
-    "cypress:run": "cypress run"   
+    "start": "ionic serve --port 8100",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@capacitor/android": "6.1.2",
     "@capacitor/app": "6.0.1",
+    "@capacitor/camera": "^6.0.2",
     "@capacitor/core": "^6.1.2",
     "@capacitor/haptics": "6.0.1",
     "@capacitor/keyboard": "6.0.2",
+    "@capacitor/preferences": "^6.0.3",
     "@capacitor/status-bar": "6.0.1",
     "@ionic/react": "^8.0.0",
     "@ionic/react-router": "^8.0.0",

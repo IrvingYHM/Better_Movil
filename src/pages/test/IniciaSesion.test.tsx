@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import IniciaSesion from '../IniciaSesión'; // Asegúrate de ajustar la ruta
+import IniciaSesion from '../Auth/IniciaSesión'; // Asegúrate de ajustar la ruta
 import { BrowserRouter as Router } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
 import React from 'react';

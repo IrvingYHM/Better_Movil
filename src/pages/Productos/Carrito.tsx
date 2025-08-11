@@ -1,7 +1,7 @@
 import { IonPage, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonLabel, IonInput, IonButton } from "@ionic/react";
 import React, { useState, useEffect } from "react";
-import Header from "../components/UI/header";
-import CerrarSesion from "./Auth/cerrarSesion";
+import Header from "../../components/UI/header";
+import CerrarSesion from "../Auth/cerrarSesion";
 import { loadStripe } from '@stripe/stripe-js';
 import { toast } from 'react-toastify';
 
